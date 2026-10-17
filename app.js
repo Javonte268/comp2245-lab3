@@ -24,6 +24,7 @@ const fruits = [
   let deck = [];
   let turnedCards = [];
   let moves = 0;
+  let matchedPairs = 0;
   let waiting = false;
   let timerId = null;
   
@@ -79,6 +80,12 @@ const fruits = [
         secondCard.disabled = true;
         statusDisplay.textContent = "That's a pair!";
         turnedCards = [];
+        matchedPairs++;
+  
+        if (matchedPairs === fruits.length) {
+          statusDisplay.textContent = `You found all the pairs in ${moves} moves!`;
+          statusDisplay.classList.add("you-won");
+        }
       } else {
         statusDisplay.textContent = "Not a pair. Try again.";
         waiting = true;
