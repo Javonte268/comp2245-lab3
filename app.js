@@ -20,6 +20,7 @@ const fruits = [
   const board = document.getElementById("board");
   const movesDisplay = document.getElementById("moves");
   const statusDisplay = document.getElementById("status");
+  const newGameBtn = document.getElementById("new-game");
   
   let deck = [];
   let turnedCards = [];
@@ -41,7 +42,30 @@ const fruits = [
     });
   }
   
+  function resetGame() {
+    if (timerId !== null) {
+      clearTimeout(timerId);
+      timerId = null;
+    }
+  
+    waiting = false;
+    turnedCards = [];
+    moves = 0;
+    matchedPairs = 0;
+  
+    movesDisplay.textContent = "Moves: 0";
+    statusDisplay.textContent = "Turn over two cards to find a matching pair.";
+    statusDisplay.classList.remove("you-won");
+  
+    board.replaceChildren();
+    buildBoard();
+  }
+  
   buildBoard();
+  
+  if (newGameBtn) {
+    newGameBtn.addEventListener("click", resetGame);
+  }
   
   board.addEventListener("click", (event) => {
     const card = event.target.closest(".card");
