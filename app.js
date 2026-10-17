@@ -24,6 +24,8 @@ const fruits = [
   let deck = [];
   let turnedCards = [];
   let moves = 0;
+  let waiting = false;
+  let timerId = null;
   
   function buildBoard() {
     deck = shuffle([...fruits, ...fruits]);
@@ -43,7 +45,12 @@ const fruits = [
   board.addEventListener("click", (event) => {
     const card = event.target.closest(".card");
   
-    if (!card || card.classList.contains("flipped") || card.classList.contains("matched")) {
+    if (
+      !card ||
+      waiting ||
+      card.classList.contains("flipped") ||
+      card.classList.contains("matched")
+    ) {
       return;
     }
   
@@ -72,6 +79,22 @@ const fruits = [
         secondCard.disabled = true;
         statusDisplay.textContent = "That's a pair!";
         turnedCards = [];
+      } else {
+        statusDisplay.textContent = "Not a pair. Try again.";
+        waiting = true;
+  
+        timerId = setTimeout(() => {
+          turnedCards.forEach((c) => {
+            c.textContent = "";
+            c.classList.remove("flipped");
+            const idx = Number(c.dataset.index) + 1;
+            c.setAttribute("aria-label", `Card ${idx}, face down`);
+          });
+  
+          turnedCards = [];
+          waiting = false;
+          timerId = null;
+        }, 1000);
       }
     }
   });
