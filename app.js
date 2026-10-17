@@ -17,9 +17,12 @@ const fruits = [
     return array;
   }
   
+  const board = document.getElementById("board");
+  let deck = [];
+  let turnedCards = [];
+  
   function buildBoard() {
-    const board = document.getElementById("board");
-    const deck = shuffle([...fruits, ...fruits]);
+    deck = shuffle([...fruits, ...fruits]);
   
     deck.forEach((fruit, index) => {
       const card = document.createElement("button");
@@ -32,3 +35,24 @@ const fruits = [
   }
   
   buildBoard();
+  
+  board.addEventListener("click", (event) => {
+    
+    const card = event.target.closest(".card");
+  
+    if (!card || card.classList.contains("flipped")) {
+      return;
+    }
+  
+    const index = card.dataset.index;
+    const fruit = deck[index];
+  
+    card.textContent = fruit.symbol;
+  
+    card.classList.add("flipped");
+  
+    const cardNumber = Number(index) + 1;
+    card.setAttribute("aria-label", `Card ${cardNumber}, ${fruit.name}`);
+  
+    turnedCards.push(card);
+  });
